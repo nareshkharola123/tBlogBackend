@@ -25,3 +25,11 @@ exports.updateBlogCategory = (blogCategory) => {
         }
         );
 }
+
+exports.deleteBlogCategory = (id) => {
+    return BlogCategory.destroy({
+        where: {
+            id:id
+        }
+    })
+}

@@ -83,3 +83,19 @@ exports.updateBlogCategory = (req, res, next) => {
         })
       })
 }
+
+exports.deleteBlogCategory = (req, res, next) => {
+    blogCategory.deleteBlogCategory(req.params.id)
+    .then(blogCategory => {
+        res.status(200).json({
+            deleted: blogCategory,
+            message: 'BlogCategory Successfully Deleted!'
+        })
+    })
+    .catch(error => {
+        res.status(422).json({
+            error: error,
+            message: 'Getting Error While Deleting BlogCategory!'
+        })
+    })
+}

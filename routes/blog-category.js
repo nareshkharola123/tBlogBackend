@@ -5,18 +5,18 @@ const { body } = require('express-validator');
 const blogCategory = require('../controllers/blog-category');
 
 // /api/blogCategory => GET
-router.get('/blogCategory/:id', blogCategory.getBlogCategory);
+router.get('/blog-category/:id', blogCategory.getBlogCategory);
 // /api/blogCategories => GET
-router.get('/blogCategories', blogCategory.getBlogCategories);
+router.get('/blog-categories', blogCategory.getBlogCategories);
 // /api/add-blogCategory => POST
-router.post('/add-blogCategory', [
+router.post('/add-blog-category', [
     body('title')
     .not().isEmpty()
     .trim()
     .escape(),
 ],blogCategory.addBlogCategory);
 // /api/update-blogCategory => PATCH
-router.patch('/update-blogCategory/:id',[
+router.patch('/update-blog-category/:id',[
     body('title')
     .not().isEmpty()
     .trim()
@@ -27,5 +27,7 @@ router.patch('/update-blogCategory/:id',[
     .escape(),
     ],
     blogCategory.updateBlogCategory);
+/* Delete Blog. */
+router.delete('/blog-category/:id', blogCategory.deleteBlogCategory);
 
 module.exports = router;
