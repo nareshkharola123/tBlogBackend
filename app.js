@@ -1,17 +1,16 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var Sequelize = require('sequelize');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
 const sequelize = require('./util/database-conf');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const blogRouter = require('./routes/blog');
+const blogCategory = require('./routes/blog-category');
 const BlogCategory = require('./models/blog-category');
 const Blog = require('./models/blog');
 
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -19,12 +18,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// routes start from here
+
+app.use('/api', blogRouter);
+app.use('/api', blogCategory);
+
+// router end here
+
 
 //model relationship start here
 
-Blog.belongsTo(BlogCategory, { constraints: true, onDelete: 'CASCADE' });
+Blog.belongsTo(BlogCategory, { 
+    constraints: true, 
+    onDelete: 'CASCADE',  
+    foreignKey: {
+    allowNull: false
+  } 
+});
 BlogCategory.hasMany(Blog);
 
 //model relationship end here

@@ -12,7 +12,8 @@ const BlogCategory = sequelize.define('blogCategory', {
     },
     title: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 });
 

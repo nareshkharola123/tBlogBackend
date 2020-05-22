@@ -1,7 +1,7 @@
+const Sequelize = require('sequelize');
 
-var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('tblogdatabase', 'arun', 'abc@123', {
+const sequelize = new Sequelize('tblogdatabase', 'arun', 'abc@123', {
     host: 'localhost',
     dialect: 'postgres'
 });

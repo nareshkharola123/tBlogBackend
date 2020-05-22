@@ -12,7 +12,8 @@ const Blog = sequelize.define('blog', {
     },
     title: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     description: {
         type: Sequelize.STRING,
@@ -21,7 +22,7 @@ const Blog = sequelize.define('blog', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    created: {
+    blogCreated: {
         type: 'TIMESTAMP',
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
