@@ -9,7 +9,7 @@ exports.getBlogs = () => {
     return Blog.findAll();
 }
 
-exports.addBlogs = (blog) => {
+exports.addBlog = (blog) => {
         return Blog.create({
             title: blog.title,
             description: blog.description,

@@ -1,96 +1,93 @@
 const { validationResult } = require('express-validator');
 
-const blog = require('../repositories/blog'); 
+const blogServices = require('../services/blog'); 
 
 
-exports.getBlog = (req,res, next) => {
-    blog.getBlog(req.params.id)
-    .then(blog => {
-        res.status(200).json({
-            blog: blog,
-            message: 'Get Blog Successful!'
-        })
-    })
-    .catch(error => {
-      res.status(422).json({
-          error: error.message,
-          message: 'Error while get blog!'
-      })  
-    })
-}
+exports.getBlog = async (req,res, next) => {
 
-exports.getBlogs = (req, res, next) => {
-    blog.getBlogs()
-    .then(blogs => {
-        res.status(200).json({
-            blogs: blogs,
-            message: 'Get Blogs Successful'
+    try{
+        const blogService = await blogServices.getBlog(req.params.id)
+        res.status(blogService.status).json({
+            data: await blogService.data,
+            message: blogService.message
         });
-    })
-    .catch(error => {
+    }catch(error){
         res.status(500).json({
-            error: error.message,
-            message: 'Error While Getting BlogCategory!'
+            data: error,
+            message: 'Internal Error!'
         });
-    });
+    }
 }
 
-exports.addBlogs = (req, res, next) => {
+exports.getBlogs = async (req, res, next) => {
+
+    try{
+        const blogService = await blogServices.getBlogs();
+        res.status(blogService.status).json({
+            data: await blogService.data,
+            message: blogService.message
+        });
+    }catch(error){
+        res.status(500).json({
+            data: error,
+            message: 'Internal Error!'
+        });
+    }
+}
+
+exports.addBlog = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
       }
 
-    blog.addBlogs(req.body)
-    .then(result =>{
-        console.log(result);
-        res.status(201).json({
-            'blog': result,
-            message: 'Blog Created Successful!'
-        })
-        
-    })
-    .catch(error => {
-        res.status(422).json({
-            error: error.message,
-            message: 'Error While adding Blog!'
+    try{
+        const blogService = await blogServices.addBlog(req.body)
+        res.status(blogService.status).json({
+            data: await blogService.data,
+            message: blogService.message
         });
-        
-    })
-    
+    }catch(error){
+        res.status(500).json({
+            data: error,
+            message: 'Internal Error!'
+        });
+    }
 }
 
-exports.deleteBlog = (req, res, next) => {
-    blog.deleteBlog(req.params.id)
-    .then(result => {
-        res.status(200).json({
-            deleted: result,
-            message: 'Blog successfully delete'
-        })
-    })
-    .catch(error => {
-        res.status(422).json({
-            deleted: error,
-            message: 'Error while deleting blog!'
-        })
-    })
+exports.deleteBlog = async (req, res, next) => {
+
+    try{
+        const blogService = await blogServices.deleteBlog(req.params.id)
+        res.status(blogService.status).json({
+            data: await blogService.data,
+            message: blogService.message
+        });
+    }catch(error){
+        res.status(500).json({
+            data: error,
+            message: 'Internal Error!'
+        });
+    }
 }
 
-exports.updateBlog = (req, res, next) => {
-    
-    blog.updateBlog(req.params.id, req.body)
-    .then(blog => {
-        
-        console.log(blog);
-        res.status(201).json({
-            blog: blog,
-            message: 'Blog Successfully Updated!' 
-        })
-    })
-    .catch(error => {
-        res.status(422).json({
-            error: error,
-            message: 'Error While updating Blog!'
-        })
-    })
+exports.updateBlog = async (req, res, next) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
+
+     try{
+        const blogService = await blogServices.updateBlog(req.params.id, req.body)
+        res.status(blogService.status).json({
+            data: await blogService.data,
+            message: blogService.message
+        });
+    }catch(error){
+        res.status(500).json({
+            data: error,
+            message: 'Internal Error!'
+        });
+    }   
 }

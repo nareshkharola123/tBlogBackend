@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator');
 
-const blogCategory = require('../repositories/blog-category');
 const blogCategoryServices = require('../services/blog-category');
 
 

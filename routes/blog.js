@@ -27,7 +27,7 @@ router.post('/add-blog', [
     .trim()
     .escape(),
 
-], blogs.addBlogs);
+], blogs.addBlog);
 /* Delete Blog. */
 router.delete('/blog/:id', blogs.deleteBlog);
 /* edit Blog. */
