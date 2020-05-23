@@ -3,7 +3,6 @@ const { validationResult } = require('express-validator');
 const blog = require('../repositories/blog'); 
 
 
-
 exports.getBlog = (req,res, next) => {
     blog.getBlog(req.params.id)
     .then(blog => {

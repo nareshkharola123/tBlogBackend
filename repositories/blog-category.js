@@ -2,7 +2,7 @@ const BlogCategory = require('../models/blog-category');
 
 
 exports.getBlogCategory = (id) => {
-    return BlogCategory.findByPk(id);
+   return BlogCategory.findByPk(id);
 }
 
 exports.getBlogCategories = () => {
@@ -17,7 +17,7 @@ exports.addBlogCategory = (blogCategory) => {
 
 exports.updateBlogCategory = (blogCategory) => {
     return BlogCategory.update(
-        {title: blogCategory},
+        {title: blogCategory.title},
         {
             where: {
                 id: blogCategory.id
