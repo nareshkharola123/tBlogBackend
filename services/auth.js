@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const user = require('../repositories/user');
+const secretData = require('../util/secret-data.json');
 
 
 exports.signUp = async (username, email, password) => {
@@ -58,7 +59,7 @@ exports.logIn = async (email, password) => {
                       email: checkUserExist.email,
                       userId: checkUserExist.id.toString()
                     },
-                    'somesupersecretsecret',
+                    secretData.privateKey,
                     { expiresIn: '1h' }
                   );
                 userData = token;

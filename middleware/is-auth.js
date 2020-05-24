@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 
+const secretData = require('../util/secret-data.json');
 
 module.exports = (req, res, next) => {
+    
   const authHeader = req.get('Authorization');
   if (!authHeader) {
     const error = new Error('Not authenticated!');
@@ -11,13 +13,13 @@ module.exports = (req, res, next) => {
   const token = authHeader;
   
   let decodedToken;
+  
   try {
-    decodedToken = jwt.verify(token, 'somesupersecretsecret');
+    decodedToken = jwt.verify(token, secretData.privateKey);
   } catch (err) {
     err.statusCode = 500;
     throw err;
   }
-  console.log(decodedToken);
   
   if (!decodedToken) {
     const error = new Error('Not authenticated!');
