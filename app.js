@@ -5,10 +5,11 @@ const logger = require('morgan');
 
 const sequelize = require('./util/database-conf');
 const blogRouter = require('./routes/blog');
-const blogCategory = require('./routes/blog-category');
+const blogCategoryRouter = require('./routes/blog-category');
 const BlogCategory = require('./models/blog-category');
 const Blog = require('./models/blog');
-
+const authRouter = require('./routes/auth');
+const errorMiddleWare = require('./middleware/error-middleware');
 
 const app = express();
 
@@ -18,10 +19,26 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//config req. headers
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+    );
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+  });
+
+// config req. headers end here
+
+
 // routes start from here
 
 app.use('/api', blogRouter);
-app.use('/api', blogCategory);
+app.use('/api', blogCategoryRouter);
+app.use('/api', authRouter)
 
 // router end here
 
@@ -38,6 +55,8 @@ Blog.belongsTo(BlogCategory, {
 BlogCategory.hasMany(Blog);
 
 //model relationship end here
+
+app.use(errorMiddleWare);
 
 sequelize.sync()
 .then(result => {

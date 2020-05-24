@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 
-const blogs = require('../controllers/blog'); 
+const blogs = require('../controllers/blog');
+const checkAuth = require('../middleware/is-auth');
 
 
 /* GET Blog. */
-router.get('/blog/:id', blogs.getBlog);
+router.get('/blog/:id', checkAuth, blogs.getBlog);
 /* GET Blogs. */
-router.get('/blogs', blogs.getBlogs);
+router.get('/blogs', checkAuth, blogs.getBlogs);
 /* post Blog. */
 router.post('/add-blog', [
     body('blogCategoryId')
@@ -27,9 +28,9 @@ router.post('/add-blog', [
     .trim()
     .escape(),
 
-], blogs.addBlog);
+], checkAuth, blogs.addBlog);
 /* Delete Blog. */
-router.delete('/blog/:id', blogs.deleteBlog);
+router.delete('/blog/:id', checkAuth, blogs.deleteBlog);
 /* edit Blog. */
 router.put('/blog/:id',[
     body('blogCategoryId')
@@ -48,8 +49,7 @@ router.put('/blog/:id',[
     .not().isEmpty()
     .trim()
     .escape(),
-]
- ,blogs.updateBlog);
+], checkAuth, blogs.updateBlog);
 
 
 module.exports = router;
