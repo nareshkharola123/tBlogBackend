@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const user = require('../repositories/user');
 const secretData = require('../util/secret-data.json');
+const sendMail = require('../util/send-mail');
 
 
 exports.signUp = async (username, email, password) => {
@@ -12,7 +13,7 @@ exports.signUp = async (username, email, password) => {
     let status;
 
     const checkUserExist = await user.getUserByEmail(email);
-    if(checkUserExist.length > 0){
+    if(checkUserExist){
         message = 'User Already Exist!',
         status = 422
 
@@ -22,6 +23,15 @@ exports.signUp = async (username, email, password) => {
             newUserData = await user.create(username, email, encryptPassword);
             message = 'User Successfully SignUp!';
             status = 201;
+
+            // sending mail
+            try{
+            const mail = await sendMail(email);
+            }catch(error){
+                console.log("::Error While Sending Mail!");
+                
+            }
+            
         }catch(error){
             userError = error;
             message = 'Error Occur While SignUp!';
@@ -44,7 +54,7 @@ exports.logIn = async (email, password) => {
 
     const checkUserExist = await user.getUserByEmail(email)
     
-    if(checkUserExist.length == 0){
+    if(checkUserExist){
         message = 'User Not Exist!',
         status = 422
 
