@@ -36,13 +36,18 @@ exports.getBlogs = async (req, res, next) => {
 }
 
 exports.addBlog = async (req, res, next) => {
+    console.log('controller hi');
+    
+    console.log(req.body);
+    console.log(req.file);
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
       }
 
     try{
-        const blogService = await blogServices.addBlog(req.body)
+        const blogService = await blogServices.addBlog(req.body, req.file.path)
         res.status(blogService.status).json({
             data: await blogService.data,
             message: blogService.message

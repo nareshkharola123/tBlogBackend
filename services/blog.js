@@ -48,14 +48,14 @@ exports.getBlogs = async () => {
     }
 }
 
-exports.addBlog = async (data) => {
+exports.addBlog = async (data, file) => {
     let newBlogData;
     let message;
     let blogError;
     let status;
 
     try{
-        newBlogData = await blog.addBlog(data);
+        newBlogData = await blog.addBlog(data, file);
         message = 'Blog Successfully Added!';
         status = 201;
     }catch(error){

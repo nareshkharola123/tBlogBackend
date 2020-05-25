@@ -20,10 +20,6 @@ router.post('/add-blog', [
     .not().isEmpty()
     .trim()
     .escape(),
-    body('imageUrl')
-    .not().isEmpty()
-    .trim()
-    .escape(),
     body('description')
     .trim()
     .escape(),

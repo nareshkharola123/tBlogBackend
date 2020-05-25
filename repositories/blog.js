@@ -9,11 +9,11 @@ exports.getBlogs = () => {
     return Blog.findAll();
 }
 
-exports.addBlog = (blog) => {
+exports.addBlog = (blog,file) => {
         return Blog.create({
             title: blog.title,
             description: blog.description,
-            imageUrl: blog.imageUrl,
+            imageUrl: file,
             blogCategoryId: blog.blogCategoryId
         })
 }

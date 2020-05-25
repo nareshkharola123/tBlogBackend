@@ -25,12 +25,12 @@ exports.signUp = async (username, email, password) => {
             status = 201;
 
             // sending mail
-            try{
-            const mail = await sendMail(email);
-            }catch(error){
-                console.log("::Error While Sending Mail!");
+            // try{
+            // const mail = await sendMail(email);
+            // }catch(error){
+            //     console.log("::Error While Sending Mail!");
                 
-            }
+            // }
             
         }catch(error){
             userError = error;
@@ -54,7 +54,7 @@ exports.logIn = async (email, password) => {
 
     const checkUserExist = await user.getUserByEmail(email)
     
-    if(checkUserExist){
+    if(!checkUserExist){
         message = 'User Not Exist!',
         status = 422
 

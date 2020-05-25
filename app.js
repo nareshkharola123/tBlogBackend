@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const multer = require('multer');
 
 const sequelize = require('./util/database-conf');
 const blogRouter = require('./routes/blog');
@@ -10,6 +11,8 @@ const BlogCategory = require('./models/blog-category');
 const Blog = require('./models/blog');
 const authRouter = require('./routes/auth');
 const errorMiddleWare = require('./middleware/error-middleware');
+const fileStorage = require('./middleware/imageCongFig').fileStorage;
+const fileFilter = require('./middleware/imageCongFig').filtFilter;
 
 const app = express();
 
@@ -18,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //config req. headers
 
@@ -33,6 +37,9 @@ app.use((req, res, next) => {
 
 // config req. headers end here
 
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('imageUrl')
+);
 
 // routes start from here
 
