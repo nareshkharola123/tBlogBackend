@@ -1,4 +1,7 @@
 const blogCategory = require('../repositories/blog-category');
+const statusCode = require('../util/message-exception.json').status;
+const success_msg = require('../util/message-exception.json').message;
+const exception_msg = require('../util/message-exception.json').exception_message;
 
 
 exports.getBlogCategory = async (blogCategoryId) => {
@@ -9,12 +12,17 @@ exports.getBlogCategory = async (blogCategoryId) => {
 
     try{
         blogCategoryData = await blogCategory.getBlogCategory(blogCategoryId);
-        message = 'BlogCategory Get Successfully!';
-        status = 200;
+        if(!blogCategoryData){
+            message = exception_msg.not_found;
+            status = statusCode.status_422;
+        }else{
+            message = success_msg.get_success;
+            status = statusCode.status_200;
+        }
     }catch(error){
         blogCategoryError = error;
-        message = 'Error Occur While Fetching BlogCategory!';
-        status = 422
+        message = exception_msg.get_error;
+        status = statusCode.status_422;
     }
 
     return {
@@ -32,13 +40,13 @@ exports.getBlogCategories = async () => {
 
     try{
         blogCategoriesData = await blogCategory.getBlogCategories();
-        message = 'BlogCategories Data Fetched Successfully!';
-        status = 200
+        message = success_msg.get_success;
+        status = statusCode.status_200;
     }
     catch(error){
-        blogCategoryError = error
-        message = 'Error While Fetching BlogCategories Data!';
-        status = 422
+        blogCategoryError = error;
+        message = exception_msg.get_error;
+        status = statusCode.status_422;
     }
 
     return {
@@ -56,12 +64,12 @@ exports.getBlogCategories = async () => {
 
      try{ 
          newBlogCategory = await blogCategory.addBlogCategory(title);
-         message = 'New BlogCategory added!';
-         status = 201;
+         message = success_msg.post_success;
+         status = statusCode.status_201;
      }catch(error){
          blogCategoryError = error;
-         message = 'Error While Adding New BlogCategory!',
-         status = 422
+         message = exception_msg.post_error;
+         status = statusCode.status_422;
      }
 
      return {
@@ -79,13 +87,13 @@ exports.getBlogCategories = async () => {
 
      try{
          updatedBlogCategory = await blogCategory.updateBlogCategory(data);
-         message = 'BlogCategory Successfully Updated!',
-         status = 201
+         message = success_msg.put_success;
+         status = statusCode.status_201;
 
      }catch(error){
         blogCategoryError = error;
-        message = 'Error while Updating BlogCategory!';
-        status = 422
+        message = exception_msg.put_error;
+        status = statusCode.status_422;
      }
 
      return {
@@ -103,13 +111,13 @@ exports.getBlogCategories = async () => {
 
     try{
         deletedBlogCategory = await blogCategory.deleteBlogCategory(id);
-        message = 'BlogCategory Successfully Deleted!',
-        status = 200
+        message = success_msg.delete_success;
+        status = statusCode.status_200;
 
     }catch(error){
        blogCategoryError = error;
-       message = 'Error while Deleting BlogCategory!';
-       status = 422
+       message = exception_msg.delete_error;
+       status = statusCode.status_422;
     }
 
     return {

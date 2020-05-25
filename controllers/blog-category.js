@@ -1,20 +1,18 @@
 const { validationResult } = require('express-validator');
 
 const blogCategoryServices = require('../services/blog-category');
+const statusCode = require('../util/message-exception.json').status;
 
 
 exports.getBlogCategory = async (req, res, next) => {
     try{
-        const blogCategoryService = await blogCategoryServices.getBlogCategory(req.params.id)
+        const blogCategoryService = await blogCategoryServices.getBlogCategory(req.params.id);
         res.status(blogCategoryService.status).json({
             data: await blogCategoryService.data,
             message: blogCategoryService.message
         });
     }catch(error){
-        res.status(500).json({
-            data: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }
 }
 
@@ -26,17 +24,14 @@ exports.getBlogCategories = async (req, res, next) => {
                     message: blogCategoriesService.message
                 });
     }catch(error){
-        res.status(500).json({
-            error: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     } 
 }
 
 exports.addBlogCategory = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(statusCode.status_422).json({ errors: errors.array() });
       }
 
       try{
@@ -46,17 +41,14 @@ exports.addBlogCategory = async (req, res, next) => {
                     message: blogCategoriesService.message
                 });
     }catch(error){
-        res.status(500).json({
-            error: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }  
 }
 
 exports.updateBlogCategory = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(statusCode.status_422).json({ errors: errors.array() });
       }
 
     try{
@@ -66,10 +58,7 @@ exports.updateBlogCategory = async (req, res, next) => {
                     message: blogCategoriesService.message
                 });
     }catch(error){
-        res.status(500).json({
-            error: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }
 }
 
@@ -82,9 +71,6 @@ exports.deleteBlogCategory = async (req, res, next) => {
                     message: blogCategoriesService.message
                 });
     }catch(error){
-        res.status(500).json({
-            error: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }
 }

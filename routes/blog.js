@@ -37,10 +37,6 @@ router.put('/blog/:id',[
     .not().isEmpty()
     .trim()
     .escape(),
-    body('imageUrl')
-    .not().isEmpty()
-    .trim()
-    .escape(),
     body('description')
     .not().isEmpty()
     .trim()

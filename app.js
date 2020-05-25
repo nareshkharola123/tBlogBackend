@@ -11,8 +11,10 @@ const BlogCategory = require('./models/blog-category');
 const Blog = require('./models/blog');
 const authRouter = require('./routes/auth');
 const errorMiddleWare = require('./middleware/error-middleware');
+const imageUpload = require('./middleware/image-upload');
 const fileStorage = require('./middleware/imageCongFig').fileStorage;
 const fileFilter = require('./middleware/imageCongFig').filtFilter;
+const User = require('./models/user');
 
 const app = express();
 
@@ -22,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
 
 //config req. headers
 
@@ -37,21 +40,20 @@ app.use((req, res, next) => {
 
 // config req. headers end here
 
-app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single('imageUrl')
-);
+app.use(multer(imageUpload).single('imageUrl'))
+
+// app.use(
+//   multer({ storage: fileStorage, fileFilter: fileFilter }).single('imageUrl')
+// );
 
 // routes start from here
-
 app.use('/api', blogRouter);
 app.use('/api', blogCategoryRouter);
 app.use('/api', authRouter)
-
 // router end here
 
 
 //model relationship start here
-
 Blog.belongsTo(BlogCategory, { 
     constraints: true, 
     onDelete: 'CASCADE',  
@@ -60,7 +62,14 @@ Blog.belongsTo(BlogCategory, {
   } 
 });
 BlogCategory.hasMany(Blog);
-
+Blog.belongsTo(User, {
+  constraints: true, 
+  onDelete: 'CASCADE',  
+  foreignKey: {
+  allowNull: false
+  }
+})
+User.hasMany(Blog);
 //model relationship end here
 
 app.use(errorMiddleWare);

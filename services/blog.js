@@ -1,4 +1,7 @@
 const blog = require('../repositories/blog');
+const statusCode = require('../util/message-exception.json').status;
+const success_msg = require('../util/message-exception.json').message;
+const exception_msg = require('../util/message-exception.json').exception_message;
 
 
 exports.getBlog = async (id) => {
@@ -9,12 +12,17 @@ exports.getBlog = async (id) => {
 
     try{
         blogData = await blog.getBlog(id);
-        message = 'Blog Get Successfully!';
-        status = 200;
+        if(!blogData){
+            message = exception_msg.not_found;
+            status = statusCode.status_422;
+        }else{
+        message = success_msg.get_success;
+        status = statusCode.status_200;
+        }
     }catch(error){
         blogError = error;
-        message = 'Error Occur While Fetching Blog!';
-        status = 422
+        message = exception_msg.get_error;
+        status = statusCode.status_422;
     }
     
     return {
@@ -33,12 +41,17 @@ exports.getBlogs = async () => {
 
     try{
         blogsData = await blog.getBlogs();
-        message = 'Blogs Get Successfully!';
-        status = 200;
+        if(!blogsData){
+            message = exception_msg.not_found;
+            status = statusCode.status_422;
+        }else{
+            message = success_msg.get_success;
+            status = statusCode.status_200;
+        }
     }catch(error){
         blogError = error;
-        message = 'Error Occur While Fetching Blogs!';
-        status = 422
+        message = exception_msg.get_error;
+        status = statusCode.status_422;
     }
     
     return {
@@ -56,12 +69,12 @@ exports.addBlog = async (data, file) => {
 
     try{
         newBlogData = await blog.addBlog(data, file);
-        message = 'Blog Successfully Added!';
-        status = 201;
+        message = success_msg.post_success;
+        status = statusCode.status_201;
     }catch(error){
         blogError = error;
-        message = 'Error Occur While Adding Blog!';
-        status = 422
+        message = exception_msg.post_error;
+        status = statusCode.status_422;
     }
     
     return {
@@ -81,12 +94,12 @@ exports.deleteBlog = async (id) => {
 
     try{
         deletedBlog = await blog.deleteBlog(id);
-        message = 'Blog Successfully Deleted!';
-        status = 200;
+        message = success_msg.delete_success;
+        status = statusCode.status_200;
     }catch(error){
         blogError = error;
-        message = 'Error Occur While Deleting Blog!';
-        status = 422
+        message =  exception_msg.delete_error;
+        status = statusCode.status_422;
     }
     
     return {
@@ -97,7 +110,7 @@ exports.deleteBlog = async (id) => {
 
 }
 
-exports.updateBlog = async (id, data) => {
+exports.updateBlog = async (id, data, file) => {
     
     let updatedBlog;
     let message;
@@ -105,13 +118,13 @@ exports.updateBlog = async (id, data) => {
     let status;
 
     try{
-        updatedBlog = await blog.updateBlog(id,data);
-        message = 'Blog Successfully Updated!';
-        status = 200;
+        updatedBlog = await blog.updateBlog(id,data, file);
+        message = success_msg.put_success;
+        status = statusCode.status_201;
     }catch(error){
         blogError = error;
-        message = 'Error Occur While Updating Blog!';
-        status = 422
+        message = exception_msg.put_error;
+        status = statusCode.status_422;
     }
     
     return {

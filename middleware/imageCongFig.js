@@ -1,5 +1,7 @@
 const multer = require('multer');
 
+const exception_msg = require('../util/message-exception.json').exception_message;
+
 
 exports.fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -19,6 +21,6 @@ exports.filtFilter = (req, file, cb) => {
     ) {
       cb(null, true);
     } else {
-      cb(null, false);
+      return cb(new Error(exception_msg.un_support_file_exc), false);
     }
   };

@@ -1,14 +1,14 @@
 const { validationResult } = require('express-validator');
 
 const authServices = require('../services/auth');
+const statusCode = require('../util/message-exception.json').status;
 
 
 exports.signUp = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(statusCode.status_422).json({ errors: errors.array() });
       }
-      
       try{
         const authService = await authServices.signUp(
             req.body.username,
@@ -20,12 +20,7 @@ exports.signUp = async (req, res, next) => {
                     message: authService.message
                 });
     }catch(error){
-        console.log(error);
-        
-        res.status(500).json({
-            error: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }   
 }
 
@@ -33,7 +28,7 @@ exports.logIn = async (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(statusCode.status_422).json({ errors: errors.array() });
       }
         
       try{
@@ -46,12 +41,7 @@ exports.logIn = async (req, res, next) => {
                     message: authService.message
                 });
     }catch(error){
-        console.log(error);
-        
-        res.status(500).json({
-            error: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }   
 
 }

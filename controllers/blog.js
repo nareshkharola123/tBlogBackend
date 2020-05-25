@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 
-const blogServices = require('../services/blog'); 
+const blogServices = require('../services/blog');
+const statusCode = require('../util/message-exception.json').status;
 
 
 exports.getBlog = async (req,res, next) => {
@@ -12,10 +13,7 @@ exports.getBlog = async (req,res, next) => {
             message: blogService.message
         });
     }catch(error){
-        res.status(500).json({
-            data: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }
 }
 
@@ -28,35 +26,25 @@ exports.getBlogs = async (req, res, next) => {
             message: blogService.message
         });
     }catch(error){
-        res.status(500).json({
-            data: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }
 }
 
 exports.addBlog = async (req, res, next) => {
-    console.log('controller hi');
-    
-    console.log(req.body);
-    console.log(req.file);
     
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(statusCode.status_422).json({ errors: errors.array() });
       }
 
     try{
-        const blogService = await blogServices.addBlog(req.body, req.file.path)
+        const blogService = await blogServices.addBlog(req.body, req.file.location);
         res.status(blogService.status).json({
             data: await blogService.data,
             message: blogService.message
         });
     }catch(error){
-        res.status(500).json({
-            data: error,
-            message: 'Internal Error!'
-        });
+       next(error);
     }
 }
 
@@ -69,30 +57,24 @@ exports.deleteBlog = async (req, res, next) => {
             message: blogService.message
         });
     }catch(error){
-        res.status(500).json({
-            data: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }
 }
 
 exports.updateBlog = async (req, res, next) => {
-
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(statusCode.status_422).json({ errors: errors.array() });
       }
-
+      
      try{
-        const blogService = await blogServices.updateBlog(req.params.id, req.body)
+        const blogService = await blogServices.updateBlog(req.params.id, req.body, req.file.location)
         res.status(blogService.status).json({
             data: await blogService.data,
             message: blogService.message
         });
     }catch(error){
-        res.status(500).json({
-            data: error,
-            message: 'Internal Error!'
-        });
+        next(error);
     }   
 }

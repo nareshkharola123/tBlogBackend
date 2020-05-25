@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 const user = require('../repositories/user');
 const secretData = require('../util/secret-data.json');
 const sendMail = require('../util/send-mail');
+const statusCode = require('../util/message-exception.json').status;
+const success_msg = require('../util/message-exception.json').message;
+const exception_msg = require('../util/message-exception.json').exception_message;
 
 
 exports.signUp = async (username, email, password) => {
@@ -14,28 +17,27 @@ exports.signUp = async (username, email, password) => {
 
     const checkUserExist = await user.getUserByEmail(email);
     if(checkUserExist){
-        message = 'User Already Exist!',
-        status = 422
+        message = exception_msg.user_exist,
+        status = statusCode.status_422
 
     }else{
         const encryptPassword = await bcrypt.hash(password, 12)
         try{
             newUserData = await user.create(username, email, encryptPassword);
-            message = 'User Successfully SignUp!';
-            status = 201;
+            message = success_msg.signUp_successful;
+            status = statusCode.status_201;
 
             // sending mail
-            // try{
-            // const mail = await sendMail(email);
-            // }catch(error){
-            //     console.log("::Error While Sending Mail!");
-                
-            // }
+            try{
+            const mail = await sendMail(email);
+            }catch(error){
+                console.info(error);  
+            }
             
         }catch(error){
             userError = error;
-            message = 'Error Occur While SignUp!';
-            status = 422
+            message = exception_msg.signUp_error,
+            status = statusCode.status_422
         }
     }
 
@@ -55,13 +57,12 @@ exports.logIn = async (email, password) => {
     const checkUserExist = await user.getUserByEmail(email)
     
     if(!checkUserExist){
-        message = 'User Not Exist!',
-        status = 422
+        message = exception_msg.user_not_exist,
+        status = statusCode.status_422
 
     }else{
         try{
             const isValidPassword = await bcrypt.compare(password, checkUserExist.password);
-            console.log('service,', isValidPassword);
             
             if(isValidPassword){
                 const token = jwt.sign(
@@ -73,18 +74,16 @@ exports.logIn = async (email, password) => {
                     { expiresIn: '1h' }
                   );
                 userData = token;
-                message = 'User Successfully Logged!';
-                status = 200;
+                message = success_msg.logIn_successful;
+                status = statusCode.status_200;
             }else{
-                message = 'Please Check Email Or Password!';
-                status = 401;
+                message = exception_msg.credentials_error;
+                status = statusCode.status_401;
             }
         }catch(error){
-            console.log(error);
-            
             userError = error;
-            message = 'Error Occur While Login!';
-            status = 422
+            message = exception_msg.login_error;
+            status = statusCode.status_422
         }
     }
 

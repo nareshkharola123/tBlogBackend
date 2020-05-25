@@ -14,7 +14,8 @@ exports.addBlog = (blog,file) => {
             title: blog.title,
             description: blog.description,
             imageUrl: file,
-            blogCategoryId: blog.blogCategoryId
+            blogCategoryId: blog.blogCategoryId,
+            modelId: blog.modelId
         })
 }
 
@@ -26,18 +27,16 @@ exports.deleteBlog = (id) => {
     })
 }
 
-exports.updateBlog = async (blogId, blogData) => {
+exports.updateBlog = async (blogId, blogData, file) => {
     Blog.findByPk(blogId)
     .then(blog => {
         blog.title = blogData.title;
         blog.description = blogData.description;
-        blog.imageUrl = blogData.imageUrl;
+        blog.imageUrl = file;
         blog.blogCategoryId = blogData.blogCategoryId;
         return blog.save();
     })
     .catch(error => {
-        console.log(error);
-        
         return error;
     })  
 }

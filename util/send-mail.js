@@ -24,11 +24,6 @@ module.exports = async (mailAddress) => {
     html: "<b>Welcome To BlogSWebsite</b>",
   });
 
-  console.log("Message sent: %s", info.messageId);
-
-  // Preview only available when sending through an Ethereal account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  console.log(info.messageId);
+  console.log(nodemailer.getTestMessageUrl(info));
 }
-
-// main().catch(console.error);
