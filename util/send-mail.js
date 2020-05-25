@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const emailConf = require('./secret-data.json').mail-conf;
+const emailConf = require('./secret-data.json').mailConf;
 
 module.exports = async (mailAddress) => {
   let testAccount = await nodemailer.createTestAccount();
